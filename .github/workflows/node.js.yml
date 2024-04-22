@@ -13,11 +13,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 'latest'
+      
+    - name: Install dependencies
+      run: npm install
+      
     - name: Run Node.js script
       run: node index.js
       
     - name: Override existing file
-      run: mv path/to/your/output/referers-latest.min.json referers-latest.min.json
+      run: mv referers-latest.min.json referers-latest-backup.min.json && mv referers-latest-temp.min.json referers-latest.min.json
       
     - name: Commit and push changes
       run: |
