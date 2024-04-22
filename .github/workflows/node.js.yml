@@ -1,0 +1,30 @@
+name: Daily Deploy
+
+on:
+  repository_dispatch:
+  schedule:
+    - cron: "0 0 * * *"  # Schedule to run every day at midnight UTC
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Run Node.js script
+      run: node index.js
+      
+    - name: Override existing file
+      run: mv path/to/your/output/referers-latest.min.json referers-latest.min.json
+      
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add referers-latest.min.json
+        git commit -m "Update referers-latest.min.json" || exit 0
+        git push origin main
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
